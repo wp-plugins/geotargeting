@@ -75,7 +75,7 @@ class GeoTarget {
 	public function __construct() {
 
 		$this->GeoTarget = 'geotarget';
-		$this->version = '1.0.0';
+		$this->version = '1.0.2';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -194,9 +194,7 @@ class GeoTarget {
 	 */
 	private function define_admin_hooks() {
 
-		global $pagenow;
-
-		$plugin_admin = new GeoTarget_Admin( $this->get_GeoTarget(), $this->get_version(), $this->functions );
+		$plugin_admin = new GeoTarget_Admin( $this->get_GeoTarget(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
