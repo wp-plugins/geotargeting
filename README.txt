@@ -24,9 +24,11 @@ Usae:
 > 
 > Check the **new premium version** available in ([http://wp.timersys.com/geotargeting/](http://wp.timersys.com/geotargeting/))
 >
+> * Maxmind API Support
+> * GeoTarget cities
 > * Editor button to easily add shortcodes
-> * Create multiple regions (group of countries) to use with shortcodes
-> * Exclude countries and regions shortcode
+> * Create multiple regions (group of countries or cities) to use with shortcodes
+> * Exclude countries, cities and regions shortcode
 > * Dropdown Widget to let users change their country
 > * Upcoming integration with other populars plugins
 > * Premium support
