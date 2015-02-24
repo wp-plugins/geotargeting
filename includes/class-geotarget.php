@@ -75,7 +75,7 @@ class GeoTarget {
 	public function __construct() {
 
 		$this->GeoTarget = 'geotarget';
-		$this->version = '1.0.2';
+		$this->version = '1.0.3';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -215,12 +215,11 @@ class GeoTarget {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-		// if( ! is_admin() ) {
 
-		// 	$this->loader->add_action( 'pre_get_posts', $plugin_public, 'filter_query' );
-
-		// }
-
+		// Popups rules
+		$this->loader->add_filter( 'spu/metaboxes/rule_types', $plugin_public, 'add_popups_rules' );
+		$this->loader->add_filter( 'spu/rules/rule_values/geot_country', $plugin_public, 'add_popups_rules_choices' );
+		$this->loader->add_filter( 'spu/rules/rule_match/geot_country', $plugin_public, 'popup_match_rules', 10, 2 );
 	}
 
 	/**

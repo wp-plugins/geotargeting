@@ -100,6 +100,50 @@ class GeoTarget_Public {
 
 	}
 
+	/**
+	 * Add rules to Popups plugin
+	 * @param $choices
+	 */
+	public function add_popups_rules( $choices ) {
+		$choices['Geotargeting'] = array(
+			'geot_country'  => 'Country'
+		);
+		return $choices;
+	}
 
+	/**
+	 * Return countries for popup rules
+	 *
+	 * @param $choices
+	 *
+	 * @return mixed
+	 */
+	public function add_popups_rules_choices($choices) {
+		$countries = apply_filters('geot/get_countries', array());
+		foreach( $countries as $c ) {
+			$choices[$c->maxmind_country_code] = $c->maxmind_country;
+		}
+		return $choices;
+	}
+
+	/**
+	 * [rule_match_logged_user description]
+	 * @param  bool $match false default
+	 * @param  array $rule rule to compare
+	 * @return boolean true if match
+	 */
+	function popup_match_rules( $match, $rule ) {
+
+		if ( $rule['operator'] == "==" ) {
+
+			return geot_target( $rule['value'] );
+
+		} else {
+
+			return geot_target( $rule['value'] );
+
+		}
+
+	}
 
 }
