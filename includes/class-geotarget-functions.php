@@ -30,7 +30,8 @@ class GeoTarget_Functions {
 	}
 
 	function setUserCountry() {
-		$this->userCountry = $this->calculateUserCountry();
+		if( !is_admin() )
+			$this->userCountry = apply_filters('geot/user_country', $this->calculateUserCountry());
 	}
 
 	/**
@@ -91,8 +92,6 @@ class GeoTarget_Functions {
 		$target = false;
 			
 		$user_country = $this->userCountry;
-
-
 			
 		if ( count( $country ) > 0 ) {
 
@@ -155,7 +154,6 @@ class GeoTarget_Functions {
 
 	/**
 	 * Get user Country
-	 * @param  string $ip 
 	 * @return array     country array
 	 */
 	public function calculateUserCountry() {
@@ -166,11 +164,15 @@ class GeoTarget_Functions {
 		// If user set cookie use instead
 		if( ! empty( $_COOKIE['geot_country']) ) {
 
-			$query 	 = "SELECT * FROM {$wpdb->prefix}Maxmind_geoIP WHERE maxmind_country_code = %s";
+			$query 	 = "SELECT * FROM {$wpdb->base_prefix}Maxmind_geoIP WHERE maxmind_country_code = %s";
 	
 			$country = $wpdb->get_row( $wpdb->prepare($query, array($_COOKIE['geot_country'])), ARRAY_A );
 
 			return $country;
+		}
+		// if we have a session it means we already calculated country on session
+		if( !empty($_SESSION['geot_country']) ) {
+			return unserialize($_SESSION['geot_country']);
 		}
 
 		$country = $this->getCountryByIp();
@@ -189,11 +191,13 @@ class GeoTarget_Functions {
 		global $wpdb;
 		
 		if( empty( $ip) ) {
-			$ip = $_SERVER['REMOTE_ADDR'];		
+			$ip = apply_filters( 'geot/user_ip', $_SERVER['REMOTE_ADDR']);		
 		}
 
-		$query 	 = "SELECT * FROM {$wpdb->prefix}Maxmind_geoIP WHERE INET_ATON('" . ($ip) . "') BETWEEN maxmind_locid_start AND maxmind_locid_end";
+		$query 	 = "SELECT * FROM {$wpdb->base_prefix}Maxmind_geoIP WHERE INET_ATON('" . ($ip) . "') BETWEEN maxmind_locid_start AND maxmind_locid_end";
 		$country = $wpdb->get_row( $query, ARRAY_A );
+
+		$_SESSION['geot_country'] = serialize($country);
 
 		return $country;
 

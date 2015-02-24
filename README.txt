@@ -1,10 +1,10 @@
-=== GeoTargeting - WordPress GeoTargeting ===
+=== GeoTargeting Lite - WordPress GeoTargeting ===
 Contributors: timersys
 Donate link: http://wp.timersys.com/geotargeting/
 Tags: geotargeting, wordpress geotargeting, geolocation, geo target, geo targeting, ip geo detect
 Requires at least: 3.6
-Tested up to: 4.0.1
-Stable tag: 1.0.0
+Tested up to: 4.1
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,6 +16,8 @@ Based on Maxmind GeoIP2 data Geo Targeting plugin for WordPress will let you cre
 
 With a simple shortcode you will be able to specify which countries are capable of seing the content.
 
+Compatible with Wordpress Popups Plugin](https://wordpress.org/plugins/popups/). You can now geotarget your popups
+
 Usae:
 `[geot country="Argentina"] Messi is the best! [/geot]`
 `[geot country="Portugal"] Cristiano ronaldo is the best! [/geot]`
@@ -24,9 +26,11 @@ Usae:
 > 
 > Check the **new premium version** available in ([http://wp.timersys.com/geotargeting/](http://wp.timersys.com/geotargeting/))
 >
+> * Maxmind API Support
+> * GeoTarget cities
 > * Editor button to easily add shortcodes
-> * Create multiple regions (group of countries) to use with shortcodes
-> * Exclude countries and regions shortcode
+> * Create multiple regions (group of countries or cities) to use with shortcodes
+> * Exclude countries, cities and regions shortcode
 > * Dropdown Widget to let users change their country
 > * Upcoming integration with other populars plugins
 > * Premium support
@@ -65,6 +69,23 @@ Enhance your site by letting your users send Social Invitations ([http://wp.time
 
 
 == Changelog ==
+
+= 1.0.3 =
+
+* Added support for [Wordpress Popups Plugin](https://wordpress.org/plugins/popups/)
+* Added multisite support
+
+= 1.0.2 =
+
+* Added sessions to cache user country and calculate it just once per session
+* Updated IP database
+* Removed calculate IP in admin area because was not necessary
+
+= 1.0.1 =
+
+* Fixed error uploading data on activation or certain servers
+* Fixed error in php functions
+* Updated IP database
 
 = 1.0.0 = 
 

@@ -33,7 +33,7 @@ class GeoTarget_Deactivator {
 
 		global $wpdb;
 
-		$drop_table = "DROP TABLE `{$wpdb->prefix}Maxmind_geoIP`";
+		$drop_table = "DROP TABLE `{$wpdb->base_prefix}Maxmind_geoIP`";
 
 		$wpdb->query( $drop_table );
 	}

@@ -32,7 +32,7 @@ class GeoTarget_Activator {
 	public static function activate() {
 		global $wpdb;
 
-$create_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}Maxmind_geoIP` (
+$create_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->base_prefix}Maxmind_geoIP` (
 	`id`	 		INT(1) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, -- the id just for numeric
 	`maxmind_ipstart` 	VARCHAR(50) COLLATE UTF8_GENERAL_CI NOT NULL, -- the ip start from maxmind data
 	`maxmind_ipend` 	VARCHAR(50) COLLATE UTF8_GENERAL_CI NOT NULL, -- the ip end of maxmind data
@@ -46,12 +46,15 @@ $create_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}Maxmind_geoIP` (
 ) DEFAULT CHARSET=UTF8 COLLATE=UTF8_GENERAL_CI AUTO_INCREMENT=1 ;";
 		
 		$csv_file = dirname( __FILE__ ) . '/GeoIPCountryWhois.csv';
- 
-		$load_data = "LOAD DATA INFILE '{$csv_file}' INTO TABLE `{$wpdb->prefix}Maxmind_geoIP` FIELDS TERMINATED BY ',' ENCLOSED BY '\"' ESCAPED BY '\\\' LINES TERMINATED BY '\\n' ( `maxmind_ipstart` , `maxmind_ipend` , `maxmind_locid_start` , `maxmind_locid_end` , `maxmind_country_code` , `maxmind_country`);";
-			
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( $create_table );
-		$wpdb->query( $load_data );
+
+		$table_name = "{$wpdb->base_prefix}Maxmind_geoIP";
+
+		if ($wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'") != $table_name) {
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $create_table );
+			$load_data = "LOAD DATA LOCAL INFILE '{$csv_file}' INTO TABLE `{$wpdb->base_prefix}Maxmind_geoIP` FIELDS TERMINATED BY ',' ENCLOSED BY '\"' ESCAPED BY '\\\' LINES TERMINATED BY '\\n' ( `maxmind_ipstart` , `maxmind_ipend` , `maxmind_locid_start` , `maxmind_locid_end` , `maxmind_country_code` , `maxmind_country`);";
+			$wpdb->query( $load_data );
+		}
 	}
 
 }
