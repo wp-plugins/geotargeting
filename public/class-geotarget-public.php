@@ -140,7 +140,7 @@ class GeoTarget_Public {
 
 		} else {
 
-			return geot_target( $rule['value'] );
+			return !geot_target( $rule['value'] );
 
 		}
 
