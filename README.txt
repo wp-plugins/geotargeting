@@ -1,10 +1,10 @@
-=== GeoTargeting - WordPress GeoTargeting ===
+=== GeoTargeting Lite - WordPress GeoTargeting ===
 Contributors: timersys
 Donate link: http://wp.timersys.com/geotargeting/
-Tags: geotargeting, wordpress geotargeting, geolocation, geo target, geo targeting, ip geo detect
+Tags: geolocation, geotargeting, wordpress geotargeting, geo target, geo targeting, ip geo detect
 Requires at least: 3.6
-Tested up to: 4.0.1
-Stable tag: 1.0.0
+Tested up to: 4.2.2
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,19 +14,27 @@ GeoTargeting for WordPress will let you country-target your content based on use
 
 Based on Maxmind GeoIP2 data Geo Targeting plugin for WordPress will let you create dynamic content based on your users country.
 
-With a simple shortcode you will be able to specify which countries are capable of seing the content.
+With a simple shortcode you will be able to specify which countries are capable of seeing the content.
 
-Usae:
+Compatible with [Wordpress Popups Plugin](https://wordpress.org/plugins/popups/). You can now geotarget your popups
+
+Now also compatible with *Cloudflare Geolocation*. Simple add define('GEOT_CLOUDFLARE',true); to your wp-config.php file to enable it!
+
+Usage:
 `[geot country="Argentina"] Messi is the best! [/geot]`
 `[geot country="Portugal"] Cristiano ronaldo is the best! [/geot]`
+`[geot exclude_country="Portugal"] This text is seeing by everyone except Portuguese people [/geot]`
 
 > <strong>Premium Version</strong><br>
 > 
 > Check the **new premium version** available in ([http://wp.timersys.com/geotargeting/](http://wp.timersys.com/geotargeting/))
 >
+> * Maxmind API Support
+> * GeoTarget cities
+> * Cloudflare geolocation support
 > * Editor button to easily add shortcodes
-> * Create multiple regions (group of countries) to use with shortcodes
-> * Exclude countries and regions shortcode
+> * Create multiple regions (group of countries or cities) to use with shortcodes
+> * Exclude countries, cities and regions shortcode
 > * Dropdown Widget to let users change their country
 > * Upcoming integration with other populars plugins
 > * Premium support
@@ -61,10 +69,35 @@ Enhance your site by letting your users send Social Invitations ([http://wp.time
 
 == Frequently Asked Questions ==
 
-= None yet =
-
+= How can I display content to everyone except some countries =
+If you have content that want to be display to USA's users but then you want to show another content to everyone else, you can do the followin:
+`[geot country="United States"] USA only content [/geot]`
+`[geot exclude_country="United States"] Everyone except USA will see this [/geot]`
 
 == Changelog ==
+
+= 1.1 =
+
+* Now we use Maxmind API and mmdb database instead of loading mysql server
+* No more heavy databases installs on plugin installation
+* Added cloudflare geolocation
+
+= 1.0.3 =
+
+* Added support for [Wordpress Popups Plugin](https://wordpress.org/plugins/popups/)
+* Added multisite support
+
+= 1.0.2 =
+
+* Added sessions to cache user country and calculate it just once per session
+* Updated IP database
+* Removed calculate IP in admin area because was not necessary
+
+= 1.0.1 =
+
+* Fixed error uploading data on activation or certain servers
+* Fixed error in php functions
+* Updated IP database
 
 = 1.0.0 = 
 

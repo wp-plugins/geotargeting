@@ -9,6 +9,8 @@
  * @subpackage GeoTarget/includes
  * @author     Your Name <email@example.com>
  */
+use GeoIp2\Database\Reader;
+
 class GeoTarget_Functions {
 
 	/**
@@ -24,13 +26,13 @@ class GeoTarget_Functions {
 	 */
 	public function __construct( ) {
 
-		add_action('init' , array($this,'setUserCountry' ) );
-		
+			add_action('init' , array($this,'setUserCountry' ) );
 
 	}
 
 	function setUserCountry() {
-		$this->userCountry = $this->calculateUserCountry();
+		if( !is_admin() )
+			$this->userCountry = apply_filters('geot/user_country', $this->calculateUserCountry());
 	}
 
 	/**
@@ -91,14 +93,11 @@ class GeoTarget_Functions {
 		$target = false;
 			
 		$user_country = $this->userCountry;
-
-
-			
 		if ( count( $country ) > 0 ) {
 
 			foreach ( $country as $c ) {
 
-				if ( strtolower( $user_country['maxmind_country'] ) == strtolower( $c )|| strtolower( $user_country['maxmind_country_code'] ) == strtolower( $c ) ) {
+				if ( strtolower( $user_country->name ) == strtolower( $c )|| strtolower( $user_country->isoCode ) == strtolower( $c ) ) {
 					$target = true;
 				}
 
@@ -113,7 +112,7 @@ class GeoTarget_Functions {
 
 			foreach ( $exclude_country as $c ) {
 
-				if ( strtolower( $user_country['maxmind_country'] ) == strtolower( $c ) || strtolower( $user_country['maxmind_country_code'] ) == strtolower( $c ) ) {
+				if ( strtolower( $user_country->name ) == strtolower( $c ) || strtolower( $user_country->isoCode ) == strtolower( $c ) ) {
 					$target = false;
 				}
 
@@ -149,28 +148,39 @@ class GeoTarget_Functions {
 	 * @return array Country array object
 	 */
 	public function get_user_country()
-	{	
+	{
+		if( empty( $this->userCountry ) ) {
+			$this->userCountry = $this->calculateUserCountry();
+		}
 		return $this->userCountry;
 	}
 
 	/**
 	 * Get user Country
-	 * @param  string $ip 
 	 * @return array     country array
 	 */
 	public function calculateUserCountry() {
 		
 		global $wpdb;
-		
 
+		$opts = apply_filters('geot/settings_page/opts', get_option( 'geot_settings' ) );
 		// If user set cookie use instead
-		if( ! empty( $_COOKIE['geot_country']) ) {
+		if( !defined('GEOT_DEBUG') &&  ! empty( $_COOKIE['geot_country']) || ( defined( 'GEOT_CLOUDFLARE' ) && !empty($_SERVER["HTTP_CF_IPCOUNTRY"]) ) ) {
 
-			$query 	 = "SELECT * FROM {$wpdb->prefix}Maxmind_geoIP WHERE maxmind_country_code = %s";
-	
-			$country = $wpdb->get_row( $wpdb->prepare($query, array($_COOKIE['geot_country'])), ARRAY_A );
+			$query 	 = "SELECT * FROM {$wpdb->base_prefix}geot_countries WHERE iso_code = %s";
+			$iso_code = empty( $_COOKIE['geot_country'] ) ? $_SERVER["HTTP_CF_IPCOUNTRY"] : $_COOKIE['geot_country'];
+
+			$result = $wpdb->get_row( $wpdb->prepare($query, array( $iso_code )), ARRAY_A );
+			$country = new StdClass;
+
+			$country->name      = $result['country'];
+			$country->isoCode   = $result['iso_code'];
 
 			return $country;
+		}
+		// if we have a session it means we already calculated country on session
+		if( !defined('GEOT_DEBUG') && !empty($_SESSION['geot_country']) ) {
+			return unserialize($_SESSION['geot_country']);
 		}
 
 		$country = $this->getCountryByIp();
@@ -185,15 +195,16 @@ class GeoTarget_Functions {
 	 * @return array     country array
 	 */
 	public function getCountryByIp( $ip = "" ) {
-		
-		global $wpdb;
-		
+
 		if( empty( $ip) ) {
-			$ip = $_SERVER['REMOTE_ADDR'];		
+			$ip = apply_filters( 'geot/user_ip', $_SERVER['REMOTE_ADDR']);		
 		}
 
-		$query 	 = "SELECT * FROM {$wpdb->prefix}Maxmind_geoIP WHERE INET_ATON('" . ($ip) . "') BETWEEN maxmind_locid_start AND maxmind_locid_end";
-		$country = $wpdb->get_row( $query, ARRAY_A );
+		$reader = new Reader(plugin_dir_path( dirname( __FILE__ ) ) . 'includes/data/GeoLite2-Country.mmdb');
+
+		$country= $reader->country($ip)->country;
+
+		$_SESSION['geot_country'] = serialize($country);
 
 		return $country;
 
