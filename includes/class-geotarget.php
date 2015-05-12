@@ -30,6 +30,12 @@
 class GeoTarget {
 
 	/**
+	 * @since 1.1
+	 * @var notices class
+	 */
+	public $geot_notices;
+
+	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
@@ -75,7 +81,7 @@ class GeoTarget {
 	public function __construct() {
 
 		$this->GeoTarget = 'geotarget';
-		$this->version = '1.0.0';
+		$this->version = '1.1.1';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -110,6 +116,7 @@ class GeoTarget {
 	 */
 	private function load_dependencies() {
 
+		require plugin_dir_path( dirname( __FILE__ ) ) . 'vendor/autoload.php';
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
@@ -147,7 +154,10 @@ class GeoTarget {
 		 * The class responsible for registering shortcodes
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-geotarget-shortcodes.php';
-		
+
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-geotarget-notices.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-geotarget-upgrader.php';
+
 
 
 		$this->loader = new GeoTarget_Loader();
@@ -194,9 +204,10 @@ class GeoTarget {
 	 */
 	private function define_admin_hooks() {
 
-		global $pagenow;
-
-		$plugin_admin = new GeoTarget_Admin( $this->get_GeoTarget(), $this->get_version(), $this->functions );
+		$plugin_admin = new GeoTarget_Admin( $this->get_GeoTarget(), $this->get_version() );
+		$this->geot_notices    = new GeoTarget_Notices( $this->version );
+		if( get_option('geot_plugin_updated') && !get_option('geot_rate_plugin') )
+			$this->loader->add_action( 'admin_notices', $this->geot_notices, 'rate_plugin' );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -217,12 +228,11 @@ class GeoTarget {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-		// if( ! is_admin() ) {
 
-		// 	$this->loader->add_action( 'pre_get_posts', $plugin_public, 'filter_query' );
-
-		// }
-
+		// Popups rules
+		$this->loader->add_filter( 'spu/metaboxes/rule_types', $plugin_public, 'add_popups_rules' );
+		$this->loader->add_filter( 'spu/rules/rule_values/geot_country', $plugin_public, 'add_popups_rules_choices' );
+		$this->loader->add_filter( 'spu/rules/rule_match/geot_country', $plugin_public, 'popup_match_rules', 10, 2 );
 	}
 
 	/**
