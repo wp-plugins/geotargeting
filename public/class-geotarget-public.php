@@ -121,7 +121,7 @@ class GeoTarget_Public {
 	public function add_popups_rules_choices($choices) {
 		$countries = apply_filters('geot/get_countries', array());
 		foreach( $countries as $c ) {
-			$choices[$c->maxmind_country_code] = $c->maxmind_country;
+			$choices[$c->iso_code] = $c->country;
 		}
 		return $choices;
 	}

@@ -38,7 +38,7 @@ function geot_country_code( ) {
 	
 	$c = geot_user_country();
 
-	return $c['maxmind_country_code'];
+	return $c->isoCode;
 }
 
 /** 
@@ -51,7 +51,7 @@ function geot_country_name() {
 
 	$c = $geot->functions->get_user_country();
 
-	return $c['maxmind_country'];
+	return $c->country;
 }
 
 

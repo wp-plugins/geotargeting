@@ -92,7 +92,7 @@ class GeoTarget_Filters {
 		if( false === $countries ) {
 			global $wpdb;
 
-			$countries = $wpdb->get_results( "SELECT DISTINCT maxmind_country_code, maxmind_country FROM {$wpdb->base_prefix}Maxmind_geoIP ORDER BY maxmind_country ");
+			$countries = $wpdb->get_results( "SELECT iso_code, country FROM {$wpdb->base_prefix}geot_countries ORDER BY country ");
 			
 			wp_cache_set( 'geot_countries', $countries); 
 		}
