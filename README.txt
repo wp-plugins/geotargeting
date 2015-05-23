@@ -4,7 +4,7 @@ Donate link: http://wp.timersys.com/geotargeting/
 Tags: geolocation, geotargeting, wordpress geotargeting, geo target, geo targeting, ip geo detect
 Requires at least: 3.6
 Tested up to: 4.2.2
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,10 @@ If you have content that want to be display to USA's users but then you want to 
 `[geot exclude_country="United States"] Everyone except USA will see this [/geot]`
 
 == Changelog ==
+
+= 1.1.2 =
+* Fixed function country name
+* Added fallback in case IP not found
 
 = 1.1.1 =
 * Fixed bug with popups integration

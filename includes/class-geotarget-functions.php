@@ -167,14 +167,9 @@ class GeoTarget_Functions {
 		// If user set cookie use instead
 		if( !defined('GEOT_DEBUG') &&  ! empty( $_COOKIE['geot_country']) || ( defined( 'GEOT_CLOUDFLARE' ) && !empty($_SERVER["HTTP_CF_IPCOUNTRY"]) ) ) {
 
-			$query 	 = "SELECT * FROM {$wpdb->base_prefix}geot_countries WHERE iso_code = %s";
 			$iso_code = empty( $_COOKIE['geot_country'] ) ? $_SERVER["HTTP_CF_IPCOUNTRY"] : $_COOKIE['geot_country'];
 
-			$result = $wpdb->get_row( $wpdb->prepare($query, array( $iso_code )), ARRAY_A );
-			$country = new StdClass;
-
-			$country->name      = $result['country'];
-			$country->isoCode   = $result['iso_code'];
+			$country = $this->getCountryByIsoCode( $iso_code );
 
 			return $country;
 		}
@@ -199,9 +194,19 @@ class GeoTarget_Functions {
 		if( empty( $ip) ) {
 			$ip = apply_filters( 'geot/user_ip', $_SERVER['REMOTE_ADDR']);		
 		}
-
+		try {
 		$reader = new Reader(plugin_dir_path( dirname( __FILE__ ) ) . 'includes/data/GeoLite2-Country.mmdb');
+		} catch( GeoIp2\Exception\AddressNotFoundException $e ) {
 
+			return array(
+				'country' => $this->getCountryByIsoCode( apply_filters('geot/fallback_iso_code', 'US') ),
+				'city'    => '',
+				'zip'     => '',
+				'state'   => '',
+			);
+
+			return false;
+		}
 		$country= $reader->country($ip)->country;
 
 		$_SESSION['geot_country'] = serialize($country);
@@ -210,4 +215,21 @@ class GeoTarget_Functions {
 
 	}
 
+	/**
+	 * Get country from database and return object like maxmind
+	 * @param $iso_code
+	 *
+	 * @return StdClass
+	 */
+	private function getCountryByIsoCode( $iso_code ) {
+		global $wpdb;
+		$query 	 = "SELECT * FROM {$wpdb->base_prefix}geot_countries WHERE iso_code = %s";
+		$result = $wpdb->get_row( $wpdb->prepare($query, array( $iso_code )), ARRAY_A );
+		$country = new StdClass;
+
+		$country->name      = $result['country'];
+		$country->isoCode   = $result['iso_code'];
+
+		return $country;
+	}
 }	

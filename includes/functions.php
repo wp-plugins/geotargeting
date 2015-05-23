@@ -51,7 +51,7 @@ function geot_country_name() {
 
 	$c = $geot->functions->get_user_country();
 
-	return $c->country;
+	return $c->name;
 }
 
 
