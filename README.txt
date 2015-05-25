@@ -12,11 +12,11 @@ GeoTargeting for WordPress will let you country-target your content based on use
 
 == Description ==
 
-Based on Maxmind GeoIP2 data Geo Targeting plugin for WordPress will let you create dynamic content based on your users country.
+Based on [Maxmind GeoIP2](http://www.maxmind.com/?rId=timersys) data Geo Targeting plugin for WordPress will let you create dynamic content based on your users country.
 
 With a simple shortcode you will be able to specify which countries are capable of seeing the content.
 
-Compatible with [Wordpress Popups Plugin](https://wordpress.org/plugins/popups/). You can now geotarget your popups
+Compatible with [Wordpress Popups Plugin](https://wp.timersys.com/popups/?utm_source=geot-readme&utm_medium=link&utm_term=popus%20premium&utm_campaign=Popups%20premium). You can now geotarget your popups
 
 Now also compatible with *Cloudflare Geolocation*. Simple add define('GEOT_CLOUDFLARE',true); to your wp-config.php file to enable it!
 
@@ -27,10 +27,11 @@ Usage:
 
 > <strong>Premium Version</strong><br>
 > 
-> Check the **new premium version** available in ([http://wp.timersys.com/geotargeting/](http://wp.timersys.com/geotargeting/))
+> Check the **new premium version** available in ([http://wp.timersys.com/geotargeting/](https://wp.timersys.com/geotargeting/?utm_source=geot-readme&utm_medium=link&utm_term=geot%20premium&utm_campaign=Geot%20premium))
 >
-> * Maxmind API Support
-> * GeoTarget cities
+> * [Maxmind API](https://www.maxmind.com/en/geoip2-precision-services?rId=timersys) keys compatible
+> * [Maxmind premium database](https://www.maxmind.com/en/geoip2-city?rId=timersys) compatible
+> * GeoTarget cities and states
 > * Cloudflare geolocation support
 > * Editor button to easily add shortcodes
 > * Create multiple regions (group of countries or cities) to use with shortcodes
