@@ -101,6 +101,15 @@ class GeoTarget_Public {
 	}
 
 	/**
+	 * Register the popup rules fields
+	 */
+	function register_popup_fields() {
+		if( class_exists( 'Spu_Helper') ) {
+			add_action( 'spu/rules/print_geot_country_field', array( 'Spu_Helper', 'print_select'), 10, 2 );
+		}
+	}
+
+	/**
 	 * Add rules to Popups plugin
 	 * @param $choices
 	 */
