@@ -100,6 +100,59 @@ class GeoTarget_Public {
 
 	}
 
+	/**
+	 * Register the popup rules fields
+	 */
+	function register_popup_fields() {
+		if( class_exists( 'Spu_Helper') ) {
+			add_action( 'spu/rules/print_geot_country_field', array( 'Spu_Helper', 'print_select'), 10, 2 );
+		}
+	}
 
+	/**
+	 * Add rules to Popups plugin
+	 * @param $choices
+	 */
+	public function add_popups_rules( $choices ) {
+		$choices['Geotargeting'] = array(
+			'geot_country'  => 'Country'
+		);
+		return $choices;
+	}
+
+	/**
+	 * Return countries for popup rules
+	 *
+	 * @param $choices
+	 *
+	 * @return mixed
+	 */
+	public function add_popups_rules_choices($choices) {
+		$countries = apply_filters('geot/get_countries', array());
+		foreach( $countries as $c ) {
+			$choices[$c->iso_code] = $c->country;
+		}
+		return $choices;
+	}
+
+	/**
+	 * [rule_match_logged_user description]
+	 * @param  bool $match false default
+	 * @param  array $rule rule to compare
+	 * @return boolean true if match
+	 */
+	function popup_match_rules( $match, $rule ) {
+
+		if ( $rule['operator'] == "==" ) {
+
+			return geot_target( $rule['value'] );
+
+		} else {
+
+			return !geot_target( $rule['value'] );
+
+		}
+
+	}
 
 }
