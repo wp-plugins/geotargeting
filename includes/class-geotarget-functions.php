@@ -31,7 +31,9 @@ class GeoTarget_Functions {
 	}
 
 	function setUserCountry() {
-		if( !is_admin() )
+		if( !is_admin()
+		    && ! defined('DOING_CRON')
+		    && ! defined('DOING_AJAX') )
 			$this->userCountry = apply_filters('geot/user_country', $this->calculateUserCountry());
 	}
 
@@ -195,7 +197,8 @@ class GeoTarget_Functions {
 			$ip = apply_filters( 'geot/user_ip', $_SERVER['REMOTE_ADDR']);		
 		}
 		try {
-		$reader = new Reader(plugin_dir_path( dirname( __FILE__ ) ) . 'includes/data/GeoLite2-Country.mmdb');
+			$reader = new Reader(plugin_dir_path( dirname( __FILE__ ) ) . 'includes/data/GeoLite2-Country.mmdb');
+			$country= $reader->country($ip)->country;
 		} catch( GeoIp2\Exception\AddressNotFoundException $e ) {
 
 			return array(
@@ -207,7 +210,7 @@ class GeoTarget_Functions {
 
 			return false;
 		}
-		$country= $reader->country($ip)->country;
+
 
 		$_SESSION['geot_country'] = serialize($country);
 

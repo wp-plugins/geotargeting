@@ -3,8 +3,8 @@ Contributors: timersys
 Donate link: http://wp.timersys.com/geotargeting/
 Tags: geolocation, geotargeting, wordpress geotargeting, geo target, geo targeting, ip geo detect
 Requires at least: 3.6
-Tested up to: 4.2.2
-Stable tag: 1.1.3
+Tested up to: 4.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,8 @@ Usage:
 > * [Maxmind premium database](https://www.maxmind.com/en/geoip2-city?rId=timersys) compatible
 > * GeoTarget cities and states
 > * Cloudflare geolocation support
+> * Geotarget posts / pages entirely
+> * Create multiple Redirecs based on user countries
 > * Editor button to easily add shortcodes
 > * Create multiple regions (group of countries or cities) to use with shortcodes
 > * Exclude countries, cities and regions shortcode
@@ -76,6 +78,11 @@ If you have content that want to be display to USA's users but then you want to 
 `[geot exclude_country="United States"] Everyone except USA will see this [/geot]`
 
 == Changelog ==
+
+= 1.1.4 =
+
+* Fixed bug when address is not found
+* Removed country calculation on ajax and cron calls
 
 = 1.1.3 =
 * Updated popups integration for latest version
